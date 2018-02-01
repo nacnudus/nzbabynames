@@ -3,7 +3,7 @@
 \docType{data}
 \name{nzbabynames}
 \alias{nzbabynames}
-\title{Top 100 baby names annually in New Zealand 1954-2016}
+\title{Top 100 baby names annually in New Zealand 1954-2017}
 \format{A data frame with four variables: ‘year’, ‘sex’, ‘name’ and ‘n’.}
 \source{
 \url{https://smartstart.services.govt.nz/news/baby-names/}

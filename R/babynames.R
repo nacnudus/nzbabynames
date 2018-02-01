@@ -1,4 +1,4 @@
-#' Top 100 baby names annually in New Zealand 1954-2016
+#' Top 100 baby names annually in New Zealand 1954-2017
 #'
 #' A dataset of the top 100 baby names annually in New Zealand since 1954,
 #' provided by the Department of Internal Affairs.

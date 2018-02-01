@@ -3,7 +3,7 @@ library(unpivotr)
 library(tidyverse)
 library(forcats)
 
-download.file("https://smartstart.services.govt.nz/assets/files/Top-baby-names-1954-2016.xlsx",
+download.file("https://smartstart.services.govt.nz/assets/files/Top-100-girls-and-boys-names-since-1954.xlsx",
               destfile = "nzbabynames.xlsx", mode = "wb")
 
 sheets <- tidy_xlsx("nzbabynames.xlsx")
