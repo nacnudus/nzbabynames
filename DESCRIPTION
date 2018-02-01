@@ -1,6 +1,6 @@
 Package: nzbabynames
 Title: New Zealand Baby Names 1954-2016
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: person("Duncan", "Garmonsway", email = "duncan.garmonsway@gmail.com", role = c("aut", "cre"))
 Description: A dataset of the top 100 baby names annually in New Zealand since
     1954, provided by the Department of Internal Affairs
