@@ -1,55 +1,36 @@
+library(tidyverse)
 library(tidyxl)
 library(unpivotr)
-library(tidyverse)
-library(forcats)
 
 download.file("https://smartstart.services.govt.nz/assets/files/Top-100-girls-and-boys-names-since-1954.xlsx",
-              destfile = "nzbabynames.xlsx", mode = "wb")
+              destfile = "inst/extdata/nzbabynames.xlsx", mode = "wb")
 
-sheets <- tidy_xlsx("nzbabynames.xlsx")
-
-get_data <- function(.sheet) {
-  .years <- # 5th row
-    .sheet %>%
-    filter(row == 5, is.na(character), !is.na(numeric)) %>%
-    group_by(`row`, numeric) %>% # Eliminate a duplicate 1985 in the boys' sheet
-    summarise(col = first(col)) %>%
-    ungroup %>%
-    select(row, col, year = numeric) %>%
-    mutate(year = as.integer(year)) %>%
-    split(.$col)
-  .names <- # Columns of cells with text in them
-    .sheet %>%
-    filter(row >= 8, row <= 107, col >= 3, !is.na(character)) %>%
-    select(row, col, name = character) %>%
-    split(.$col)
-  .counts <- # Columns of cells with numbers in them
-    .sheet %>%
-    filter(row >= 8, row <= 107, col >= 3, !is.na(numeric)) %>%
-    select(row, col, n = numeric) %>%
-    mutate(n = as.integer(n)) %>%
-    split(.$col)
-  # Treat as small multiples, and map over them
-  .all <- list(.years, .names, .counts)
-  pmap_df(.all,
-          function(.year, .names, .counts) {
-            .counts %>%
-              E(.names) %>%
-              ABOVE(.year)
-          }) %>%
-  select(-row, -col)
-}
+sheets <- xlsx_cells("./inst/extdata/nzbabynames.xlsx")
 
 nzbabynames <-
-  sheets$data %>%
-  map_df(get_data, .id = "sex") %>%
-  mutate(sex = fct_recode(sex,
-                          F = "Girls' Names",
-                          M = "Boys' Names"),
-         sex = as.character(sex)) %>%
-  select(year, sex, name, n)
+  sheets %>%
+  dplyr::filter(between(row, 5, 107), !is_blank) %>%
+  select(sheet, row, col, data_type, character, numeric) %>%
+  nest(-sheet) %>%
+  mutate(data = map(data,
+                    ~ .x %>%
+                      behead("NNW", "year") %>%
+                      behead("NNW", "header") %>%
+                      behead("W", "rank") %>%
+                      select(-col) %>%
+                      spatter(header))) %>%
+  unnest() %>%
+  mutate(n = if_else(is.na(No), No., No)) %>%
+  select(-row, -No., -No) %>%
+  rename(sex = sheet, name = Name) %>%
+  mutate(sex = fct_recode(sex, F = "Girls' Names", M = "Boys' Names"),
+         sex = as.character(sex),
+         year = as.integer(year),
+         n = as.integer(n)) %>%
+  select(year, sex, name, n)  %>%
+  arrange(sex, year, desc(n), name)
 
 write.csv(nzbabynames, row.names = FALSE, quote = FALSE,
           file=gzfile("./inst/extdata/babynames.csv.gz"))
 
-use_data(nzbabynames, overwrite = TRUE)
+usethis::use_data(nzbabynames, overwrite = TRUE)
