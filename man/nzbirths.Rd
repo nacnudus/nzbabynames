@@ -4,7 +4,8 @@
 \name{nzbirths}
 \alias{nzbirths}
 \title{Annual births in New Zealand 1954-2016}
-\format{A data frame with two variables: ‘year’ and ‘births’.}
+\format{A data frame with four variables: ‘year’, ‘male’, 'female' and
+'total'.  The 'total' is not always the sum of 'male' and 'female'.}
 \source{
 Statistics New Zealand
 }
