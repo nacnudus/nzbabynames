@@ -26,7 +26,7 @@ nzbabynames <-
   mutate(n = if_else(is.na(No), No., No)) %>%
   select(-row, -No., -No) %>%
   rename(sex = sheet, name = Name) %>%
-  mutate(sex = fct_recode(sex, F = "Girls' Names", M = "Boys' Names"),
+  mutate(sex = fct_recode(sex, female = "Girls' Names", male = "Boys' Names"),
          sex = as.character(sex),
          year = as.integer(year),
          n = as.integer(n)) %>%
