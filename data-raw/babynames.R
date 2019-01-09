@@ -1,11 +1,14 @@
 library(tidyverse)
 library(tidyxl)
 library(unpivotr)
+library(here)
+
+path <- here("data-raw", "Top-100-girls-and-boys-names-since-1954.xlsx")
 
 download.file("https://smartstart.services.govt.nz/assets/files/Top-100-girls-and-boys-names-since-1954.xlsx",
-              destfile = "inst/extdata/nzbabynames.xlsx", mode = "wb")
+              destfile = path, mode = "wb")
 
-sheets <- xlsx_cells("./inst/extdata/nzbabynames.xlsx")
+sheets <- xlsx_cells(path)
 
 nzbabynames <-
   sheets %>%
@@ -29,8 +32,5 @@ nzbabynames <-
          n = as.integer(n)) %>%
   select(year, sex, name, n)  %>%
   arrange(sex, year, desc(n), name)
-
-write.csv(nzbabynames, row.names = FALSE, quote = FALSE,
-          file=gzfile("./inst/extdata/babynames.csv.gz"))
 
 usethis::use_data(nzbabynames, overwrite = TRUE)
