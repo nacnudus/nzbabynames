@@ -1,4 +1,4 @@
-# nzbabynames 0.0.2
+# nzbabynames 0.1.0
 
 * Update with data up to 2017.
 * Breakdown births by sex.
